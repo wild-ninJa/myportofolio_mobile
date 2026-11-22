@@ -42,9 +42,9 @@ class _ExperienceFormPageState extends State<ExperienceFormPage> {
 
   InputDecoration _decoration(String label, {String? hint, Widget? suffix}) {
     OutlineInputBorder border(Color color, double width) => OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
-          borderSide: BorderSide(color: color, width: width),
-        );
+      borderRadius: BorderRadius.circular(16),
+      borderSide: BorderSide(color: color, width: width),
+    );
     return InputDecoration(
       labelText: label,
       hintText: hint,
@@ -86,14 +86,14 @@ class _ExperienceFormPageState extends State<ExperienceFormPage> {
 
   // Keys match the Django serializer
   Map<String, dynamic> _toJson() => {
-        'title': _title,
-        'description': _description,
-        'category': _category,
-        'institution': _institution,
-        'thumbnail': _thumbnail.isEmpty ? null : _thumbnail,
-        'started_at': _startedAt?.toIso8601String(),
-        'ended_at': _endedAt?.toIso8601String(),
-      };
+    'title': _title,
+    'description': _description,
+    'category': _category,
+    'institution': _institution,
+    'thumbnail': _thumbnail.isEmpty ? null : _thumbnail,
+    'started_at': _startedAt?.toIso8601String(),
+    'ended_at': _endedAt?.toIso8601String(),
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -161,7 +161,10 @@ class _ExperienceFormPageState extends State<ExperienceFormPage> {
                     Colors.white.withAlpha(90),
                   ],
                 ),
-                border: Border.all(color: Colors.white.withAlpha(230), width: 1.5),
+                border: Border.all(
+                  color: Colors.white.withAlpha(230),
+                  width: 1.5,
+                ),
                 boxShadow: [
                   BoxShadow(
                     color: const Color(0xFF0288D1).withAlpha(50),
@@ -179,9 +182,15 @@ class _ExperienceFormPageState extends State<ExperienceFormPage> {
                       TextFormField(
                         decoration: _decoration("Experience Title"),
                         onChanged: (v) => setState(() => _title = v),
-                        validator: (v) => (v == null || v.trim().isEmpty)
-                            ? "Judul tidak boleh kosong!"
-                            : null,
+                        validator: (v) {
+                          if (v == null || v.trim().isEmpty) {
+                            return "Title cannot be empty!";
+                          }
+                          if (v.trim().length > 255) {
+                            return "Max 255 char >:( !";
+                          }
+                          return null;
+                        },
                       ),
                     ),
                     _field(
@@ -200,8 +209,12 @@ class _ExperienceFormPageState extends State<ExperienceFormPage> {
                         initialValue: _category,
                         borderRadius: BorderRadius.circular(16),
                         items: _categories.entries
-                            .map((e) => DropdownMenuItem(
-                                value: e.key, child: Text(e.value)))
+                            .map(
+                              (e) => DropdownMenuItem(
+                                value: e.key,
+                                child: Text(e.value),
+                              ),
+                            )
                             .toList(),
                         onChanged: (v) => setState(() => _category = v!),
                       ),
@@ -213,6 +226,9 @@ class _ExperienceFormPageState extends State<ExperienceFormPage> {
                           hint: "Company / Organization name (optional)",
                         ),
                         onChanged: (v) => setState(() => _institution = v),
+                        validator: (v) => (v != null && v.trim().length > 255)
+                            ? "Max 255 char :("
+                            : null,
                       ),
                     ),
                     _field(
@@ -222,6 +238,16 @@ class _ExperienceFormPageState extends State<ExperienceFormPage> {
                           hint: "image URL (opsional)",
                         ),
                         onChanged: (v) => setState(() => _thumbnail = v),
+                        validator: (v) {
+                          if (v == null || v.trim().isEmpty)
+                            return null; // optional
+                          final uri = Uri.tryParse(v.trim());
+                          final ok =
+                              uri != null &&
+                              (uri.scheme == 'http' || uri.scheme == 'https') &&
+                              uri.host.isNotEmpty;
+                          return ok ? null : "URL tidak valid!";
+                        },
                       ),
                     ),
                     _field(
@@ -305,16 +331,15 @@ class _ExperienceFormPageState extends State<ExperienceFormPage> {
               Text('Institusi: $_institution'),
               Text('Thumbnail: $_thumbnail'),
               Text('Mulai: ${_startedAt == null ? '-' : _fmt(_startedAt!)}'),
-              Text('Selesai: ${_endedAt == null ? 'Masih berlangsung' : _fmt(_endedAt!)}'),
+              Text(
+                'Selesai: ${_endedAt == null ? 'Masih berlangsung' : _fmt(_endedAt!)}',
+              ),
             ],
           ),
         ),
         actions: [
           TextButton(
-            child: const Text(
-              'OK',
-              style: TextStyle(color: Color(0xFF0288D1)),
-            ),
+            child: const Text('OK', style: TextStyle(color: Color(0xFF0288D1))),
             onPressed: () {
               Navigator.pop(context);
               _formKey.currentState!.reset();
