@@ -129,17 +129,17 @@ class _ProjectFormPageState extends State<ProjectFormPage> {
                   children: [
                     _field(
                       TextFormField(
-                        decoration: _decoration("Nama Proyek"),
+                        decoration: _decoration("Project Name"),
                         onChanged: (v) => setState(() => _projectName = v),
                         validator: (v) => (v == null || v.trim().isEmpty)
-                            ? "Nama proyek tidak boleh kosong!"
+                            ? "Project name cannot be empty!"
                             : null,
                       ),
                     ),
                     _field(
                       TextFormField(
                         maxLines: 5,
-                        decoration: _decoration("Deskripsi Proyek"),
+                        decoration: _decoration("Project Description"),
                         onChanged: (v) => setState(() => _description = v),
                         validator: (v) => (v == null || v.trim().isEmpty)
                             ? "Deskripsi proyek tidak boleh kosong!"
@@ -148,7 +148,7 @@ class _ProjectFormPageState extends State<ProjectFormPage> {
                     ),
                     _field(
                       DropdownButtonFormField<String>(
-                        decoration: _decoration("Kategori Proyek"),
+                        decoration: _decoration("Project Category"),
                         initialValue: _category,
                         borderRadius: BorderRadius.circular(16),
                         items: _categories
@@ -160,8 +160,8 @@ class _ProjectFormPageState extends State<ProjectFormPage> {
                     _field(
                       TextFormField(
                         decoration: _decoration(
-                          "Teknologi yang Digunakan",
-                          hint: "Contoh: Flutter, Django, Figma",
+                          "Technology used",
+                          hint: "Example: Flutter, Django, Figma",
                         ),
                         onChanged: (v) => setState(() => _technologies = v),
                       ),
@@ -169,8 +169,8 @@ class _ProjectFormPageState extends State<ProjectFormPage> {
                     _field(
                       TextFormField(
                         decoration: _decoration(
-                          "Tautan Proyek",
-                          hint: "URL Proyek (opsional)",
+                          "Project link",
+                          hint: "Project URL (optional)",
                         ),
                         onChanged: (v) => setState(() => _projectLink = v),
                       ),
