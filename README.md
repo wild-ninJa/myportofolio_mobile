@@ -91,3 +91,8 @@ Saya menggunakan AI untuk membantu saya mendebug error, menjelaskan bagian yang 
 > validate() menjalankan semuanya sekaligus, memanggil semua validator di form, hasilnya true jika semuanya mengembalikan null, dn false jika ada setidaknya satu yang error. Kolom yang gagal juga otomatis mengirimkan error message.
 > Contoh nilai yang ditolah oleh validasi: Judul "       ", akan menjadi kosong karena trim(), atau judul yang melebihi 256 karakter, atau thumbnail diisi "abc" semua contho tersebut akan ditolah oleh validasi masing-masing validator.
 > Memilih jenis input atau papan ketik saja tentu belum cukup, karena keyboardType (misalnya TextInputType.url) hanya mengubah tampilan papan ketik, tidak membatasi apa yang masuk ke kolom. Begitu juga dropdown dan date picker: keduanya membatasi pilihan, tetapi tidak menjamin semua kolom wajib terisi atau urutan tanggalnya benar. adi papan ketik dan jenis input itu kenyamanan (membantu pengguna mengetik), sedangkan validasi itu penjaga aturan (menolak data yang salah).
+
+AI Disclosure Tugas 8 {
+    log: https://claude.ai/share/32004409-f85d-4ce2-b5d4-31d8ced99669
+    Penjelasan: Saya menggunakan AI untuk membantu saya guide untuk mengerjakan hal yang menurut saya membingungkan, serta memahami konsep yang belum saya kuasai. Demikian keterbatasan AI tidak sepenuhnya mengetahui apa yang sebenarnya saya inginkan, saya menggantikan sesuai dengan preferensi saya, dan untuk pemahaman perlu disesuaikan dengan materi di kelas.                                                               
+}
