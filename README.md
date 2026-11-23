@@ -69,3 +69,25 @@
 AI disclosure Tuga 7:
 Link: https://claude.ai/share/d2b85702-2cd7-4b10-a376-ecbd28886ac2
 Saya menggunakan AI untuk membantu saya mendebug error, menjelaskan bagian yang saya tidak mengerti, serta mempelajari materi untuk menjawab pertanyaan refleksi. Tentu, apa yang diberi AI ini terbatas sehingga masih perlu recheck materi pada web PBP.
+
+### Tugas 8
+1. Jelaskan perbedaan antara Navigator.push(), Navigator.pushReplacement(), dan Navigator.pop(). Metode apa yang digunakan untuk membuka formulir dari kartu aksi? Jelaskan juga bagaimana opsi Home di drawer membawa pengguna kembali ke halaman utama.
+> Navigator.push() menambah halaman baru di atas tumpukan (stack), Navigator.pushReplacement() mengganti halaman teratas dengan halaman baru, dan Navigator.pop() menghapus halaman teratas untuk kembali ke halaman sebelumnya.
+> Metode yang digunakan untuk membuka formuril dari kartu aksi adalah Navigator.push()
+> Saat Home ditekan, pushReplacement membuang halaman form dari stack dan menggantinya dengan halaman utama. Hasilnya, tombol kembali tidak lagi membawa ke form, dan stack tidak menumpuk setiap kali berpindah lewat drawer.
+ 
+2. Bagaimana susunan Scaffold, AppBar, dan Drawer membantu menjaga struktur halaman tetap konsisten? Berikan satu contoh penggunaan warna tema portofolio di lebih dari satu halaman.
+> Scaffold, Appbar, dan Drawer bekerja sebagai satu kerangka halaman. Scaffold menyediakan slot tetap, AppBar mengisi slot atas, dan Drawer mengisi slot samping. Kalau semua halaman mengisi slot yang sama dengan isi yang sama, tampilannya otomatis seragam.
+> Scaffold sebagai kerangka utama, appbar menjadi identitas dan navigasi, Drawer menyediakan banyak halaman dalam satu menu.
+> Contohnya warna dasar save button -> 0xFF29B6F6 dipakai di glossy_button.dart yang dipakai di kedua form add project dan add experience
+3. Mengapa tata letak tersebut dipilih untuk formulir? Jelaskan peran widget pengatur jarak dan widget penggulir ketika ruang layar terbatas.
+> Memilih column di dalam form, karena Input formulir bersifat berurutan, jadi susunan vertikal paling alami untuk dibaca dan diisi, crossAxisAlignment: stretch membuat semua input selebar kartu, sehingga rapi dan mudah ditekan, Form dengan GlobalKey menjadi pembungkus yang bisa memvalidasi semua TextFormField di dalamnya sekaligus lewat validate().
+> Padding memberi jarak 8 px atas-bawah tiap input. Jadi jarak ditulis sekali di satu fungsi, bukan di setiap input; SizedBox(height: 8) yaitu spasi kosong sebelum tombol Simpan, supaya tombol tidak menempel ke input terakhir; EdgeInsets.fromLTRB(16, 72, 16, 24) merupakan jarak dari tepi layar. Angka 72 di atas dipakai karena extendBodyBehindAppBar: true membuat isi halaman naik ke bawah AppBar. Tanpa padding itu, input pertama tertutup AppBar; SafeArea menjaga isi tidak tertutup notch, status bar, atau tepi layar yang melengkung.
+> Peran widget penggulir (SingleChildScrollView): SingleChildScrollView membuat isi bisa digulir, sehingga semua input dan tombol tetap bisa dicapai pada layar terbatas atau saat papan ketik tampil.
+
+4. Apa peran GlobalKey<FormState>, validator, dan validate() saat tombol Simpan ditekan? Berikan satu contoh nilai yang ditolak oleh validasi dan jelaskan mengapa memilih jenis input atau papan ketik saja belum cukup.
+> GlobalKey<FormState> sebagai pemegang ke form. Form menyimpan state-nya sendiri (daftar semua TextFormField di dalamnya). GlobalKey adalah "remote control" supaya kode kita di luar Form, misalnya di _save bisa mengaksesnya. Tanpa key, save button tidak punya cara untuk menyuruh form memeriksa isinya.
+> Validasi sebagai aturan per kolom. Fungsi kecil di tiap TextFormField. Ia menerima isi kolom, lalu mengembalikan null jika valid, String jika tidak valid, dan string itu muncul sebagai pesan merah di bawah kolom.
+> validate() menjalankan semuanya sekaligus, memanggil semua validator di form, hasilnya true jika semuanya mengembalikan null, dn false jika ada setidaknya satu yang error. Kolom yang gagal juga otomatis mengirimkan error message.
+> Contoh nilai yang ditolah oleh validasi: Judul "       ", akan menjadi kosong karena trim(), atau judul yang melebihi 256 karakter, atau thumbnail diisi "abc" semua contho tersebut akan ditolah oleh validasi masing-masing validator.
+> Memilih jenis input atau papan ketik saja tentu belum cukup, karena keyboardType (misalnya TextInputType.url) hanya mengubah tampilan papan ketik, tidak membatasi apa yang masuk ke kolom. Begitu juga dropdown dan date picker: keduanya membatasi pilihan, tetapi tidak menjamin semua kolom wajib terisi atau urutan tanggalnya benar. adi papan ketik dan jenis input itu kenyamanan (membantu pengguna mengetik), sedangkan validasi itu penjaga aturan (menolak data yang salah).
