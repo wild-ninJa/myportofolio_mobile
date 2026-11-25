@@ -2,12 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:myportofolio_mobile/screens/menu.dart';
 import 'package:myportofolio_mobile/screens/project_form.dart';
 import 'package:myportofolio_mobile/screens/experience_form.dart';
+import 'package:myportofolio_mobile/screens/login_screen.dart';
+import 'package:myportofolio_mobile/services/auth_state.dart';
+import 'package:provider/provider.dart';
 
 class LeftDrawer extends StatelessWidget {
   const LeftDrawer({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final isLoggedIn = context.watch<AuthState>().isLoggedIn;
     return Drawer(
       backgroundColor: Colors.transparent,
       child: Container(
@@ -81,27 +85,62 @@ class LeftDrawer extends StatelessWidget {
             _DrawerItem(
               icon: Icons.add_circle_outline,
               label: 'Add Project',
-              onTap: () {
+              onTap: () async {
+                if (!await ensureLoggedIn(context)) return;
+                if (!context.mounted) return;
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(
-                    builder: (context) => const ProjectFormPage(),
-                  ),
+                  MaterialPageRoute(builder: (_) => const ProjectFormPage()),
                 );
               },
             ),
-            _DrawerItem(
-              icon: Icons.add_circle_outline,
-              label: 'Add Experience',
-              onTap: () {
-                Navigator.pushReplacement(
+            // Add Experience: leave as-is unless your tutorial wants it guarded too.
+            if (!isLoggedIn)
+              _DrawerItem(
+                icon: Icons.login,
+                label: 'Login',
+                onTap: () => Navigator.push(
                   context,
-                  MaterialPageRoute(
-                    builder: (context) => const ExperienceFormPage(),
-                  ),
-                );
-              },
-            ),
+                  MaterialPageRoute(builder: (_) => const LoginScreen()),
+                ),
+              )
+            else
+              _DrawerItem(
+                icon: Icons.logout,
+                label: 'Logout',
+                onTap: () async {
+                  await context.read<AuthState>().logout();
+                  if (!context.mounted) return;
+                  Navigator.pop(context); // close drawer
+                  ScaffoldMessenger.of(
+                    context,
+                  ).showSnackBar(const SnackBar(content: Text('Logged out')));
+                },
+              ),
+            // _DrawerItem(
+            //   icon: Icons.add_circle_outline,
+            //   label: 'Add Project',
+            //   onTap: () {
+            //     Navigator.pushReplacement(
+            //       context,
+            //       MaterialPageRoute(
+            //         builder: (context) => const ProjectFormPage(),
+            //       ),
+            //     );
+            //   },
+            // ),
+            // _DrawerItem(
+            //   icon: Icons.add_circle_outline,
+            //   label: 'Add Experience',
+            //   onTap: () {
+            //     Navigator.pushReplacement(
+            //       context,
+            //       MaterialPageRoute(
+            //         builder: (context) => const ExperienceFormPage(),
+            //       ),
+            //     );
+            //   },
+            // ),
           ],
         ),
       ),
